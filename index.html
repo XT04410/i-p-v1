@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> I&P indépendance et Performance - Évaluation 15 Jours</title>
+    <title>IndepPerform - Évaluation 15 Jours</title>
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
@@ -25,69 +27,94 @@
         
         .hidden { display: none !important; }
         
+        /* Login Options */
+        .login-options {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .google-section {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #e5e7eb;
+            margin: 0 1rem;
+        }
+        
+        .email-toggle {
+            color: #2563eb;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        .email-toggle:hover {
+            text-decoration: underline;
+        }
+        
         /* Formulaire Email */
         .email-form {
-            max-width: 400px;
-            margin: 2rem auto;
+            text-align: left;
+            animation: fadeIn 0.3s ease;
         }
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
         label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 600;
             color: #374151;
+            font-size: 0.875rem;
         }
-        input[type="email"],
-        input[type="text"] {
+        input[type="email"], input[type="text"] {
             width: 100%;
-            padding: 0.875rem;
+            padding: 0.75rem;
             border: 2px solid #e5e7eb;
-            border-radius: 0.75rem;
+            border-radius: 0.5rem;
             font-size: 1rem;
-            transition: border-color 0.2s;
         }
         input:focus {
             outline: none;
             border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
         }
         
         button { 
             background: #2563eb; 
             color: white; 
             border: none; 
-            padding: 1rem 2rem; 
-            border-radius: 0.75rem; 
+            padding: 0.875rem 1.5rem; 
+            border-radius: 0.5rem; 
             cursor: pointer; 
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             width: 100%;
             transition: all 0.2s;
-            box-shadow: 0 4px 6px -1px rgba(37,99,235,0.2);
         }
         button:hover { 
             background: #1d4ed8; 
             transform: translateY(-1px);
-            box-shadow: 0 10px 15px -3px rgba(37,99,235,0.3);
-        }
-        button:disabled {
-            background: #9ca3af;
-            cursor: not-allowed;
-            transform: none;
         }
         
         /* Questionnaire */
-        .progress-container {
-            margin-bottom: 2rem;
-        }
+        .progress-container { margin-bottom: 2rem; }
         .progress-bar { 
             height: 10px; 
             background: #e5e7eb; 
             border-radius: 999px; 
             overflow: hidden;
-            margin-bottom: 0.5rem;
         }
         .progress-fill { 
             height: 100%; 
@@ -99,46 +126,39 @@
             text-align: center;
             color: #6b7280;
             font-size: 0.875rem;
+            margin-top: 0.5rem;
             font-weight: 500;
         }
         
         .question { 
-            margin-bottom: 2.5rem; 
-            padding: 2rem;
+            margin-bottom: 2rem; 
+            padding: 1.5rem;
             background: #f9fafb;
             border-radius: 1rem;
             border: 1px solid #e5e7eb;
-            animation: fadeIn 0.5s ease;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
         .question-header {
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1rem;
         }
         .question-number {
             background: #2563eb;
             color: white;
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             font-size: 0.875rem;
-            flex-shrink: 0;
         }
         .pillar-tag {
             font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
             padding: 0.25rem 0.75rem;
             border-radius: 999px;
         }
@@ -148,49 +168,22 @@
         .tag-temps { background: #ffedd5; color: #d97706; }
         .tag-discipline { background: #f3f4f6; color: #1f2937; border: 1px solid #d1d5db; }
         
-        .question-text { 
-            font-size: 1.125rem; 
-            font-weight: 600; 
-            color: #111827;
-            margin-bottom: 1.5rem;
-            line-height: 1.4;
-        }
+        .question-text { font-weight: 600; margin-bottom: 1rem; color: #1e293b; }
         
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
+        .options { display: flex; flex-direction: column; gap: 0.5rem; }
         .option-label {
             display: flex;
-            align-items: flex-start;
-            padding: 1rem 1.25rem;
+            align-items: center;
+            padding: 0.75rem 1rem;
             background: white;
             border: 2px solid #e5e7eb;
-            border-radius: 0.75rem;
+            border-radius: 0.5rem;
             cursor: pointer;
             transition: all 0.2s;
         }
-        .option-label:hover {
-            border-color: #2563eb;
-            background: #eff6ff;
-        }
-        .option-label.selected {
-            border-color: #2563eb;
-            background: #eff6ff;
-            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
-        }
-        .option-label input[type="radio"] {
-            margin-right: 0.75rem;
-            margin-top: 0.25rem;
-            width: 18px;
-            height: 18px;
-            accent-color: #2563eb;
-        }
-        .option-text {
-            color: #374151;
-            line-height: 1.4;
-        }
+        .option-label:hover { border-color: #2563eb; background: #eff6ff; }
+        .option-label.selected { border-color: #2563eb; background: #eff6ff; }
+        .option-label input[type="radio"] { margin-right: 0.75rem; display: none; }
         
         .nav-buttons {
             display: flex;
@@ -202,166 +195,90 @@
             color: #374151;
             flex: 1;
         }
-        .btn-secondary:hover {
-            background: #e5e7eb;
-        }
-        .btn-primary {
-            flex: 2;
-        }
+        .btn-secondary:hover { background: #e5e7eb; }
+        .btn-primary { flex: 2; }
         
         /* Résultats */
-        .results-container {
-            text-align: center;
-            padding: 2rem 0;
-        }
         .score-circle {
-            width: 200px;
-            height: 200px;
+            width: 150px;
+            height: 150px;
             border-radius: 50%;
             background: conic-gradient(#2563eb calc(var(--score) * 1%), #e5e7eb 0);
             margin: 0 auto 2rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
         }
         .score-inner {
-            width: 160px;
-            height: 160px;
+            width: 120px;
+            height: 120px;
             background: white;
             border-radius: 50%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
-        .score-value {
-            font-size: 3rem;
-            font-weight: 800;
-            color: #1f2937;
-            line-height: 1;
-        }
-        .score-label {
+        .score-value { font-size: 2.5rem; font-weight: 800; color: #1f2937; }
+        
+        .logout-btn {
+            background: #fee2e2;
+            color: #dc2626;
+            width: auto;
+            padding: 0.5rem 1rem;
             font-size: 0.875rem;
-            color: #6b7280;
-            margin-top: 0.25rem;
+            float: right;
         }
         
-        .result-title {
-            font-size: 1.875rem;
-            color: #111827;
-            margin-bottom: 1rem;
-        }
-        .result-description {
-            color: #4b5563;
-            font-size: 1.125rem;
-            line-height: 1.6;
-            max-width: 600px;
-            margin: 0 auto 2rem;
-        }
-        
-        .pillars-detail {
-            background: #f9fafb;
-            border-radius: 1rem;
-            padding: 2rem;
-            margin: 2rem 0;
-            text-align: left;
-        }
-        .pillars-detail h3 {
-            margin-bottom: 1.5rem;
-            color: #111827;
-            text-align: center;
-        }
-        .pillar-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1.25rem;
-            gap: 1rem;
-        }
-        .pillar-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            flex-shrink: 0;
-        }
-        .pillar-info {
-            flex: 1;
-        }
-        .pillar-name {
-            font-weight: 600;
-            color: #374151;
-            text-transform: capitalize;
-            margin-bottom: 0.25rem;
-        }
-        .pillar-bar {
-            height: 8px;
-            background: #e5e7eb;
-            border-radius: 999px;
-            overflow: hidden;
-        }
-        .pillar-fill {
-            height: 100%;
-            border-radius: 999px;
-            transition: width 1s ease;
-        }
-        .pillar-score {
-            font-weight: 700;
-            color: #2563eb;
-            min-width: 45px;
-            text-align: right;
-        }
-        
-        .success-message {
-            background: #dcfce7;
-            border: 1px solid #86efac;
-            color: #15803d;
-            padding: 1rem;
-            border-radius: 0.75rem;
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            font-weight: 600;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
-    <!-- PAGE CONNEXION (Email simple) -->
+    <!-- PAGE DE CONNEXION -->
     <div id="login-page" class="container">
         <h1>IndepPerform</h1>
         <p class="subtitle">Évaluez vos 5 piliers d'indépendance<br>15 questions • 5 minutes • Résultats immédiats</p>
         
-        <form class="email-form" onsubmit="handleEmailSubmit(event)">
-            <div class="form-group">
-                <label for="prenom">Votre prénom</label>
-                <input type="text" id="prenom" name="prenom" placeholder="Jean" required>
+        <div class="login-options">
+            <!-- Option 1: Google -->
+            <div class="google-section">
+                <div id="g_id_onload" data-client_id="TON_CLIENT_ID.apps.googleusercontent.com" data-callback="handleCredentialResponse"></div>
+                <div id="google-btn"></div>
             </div>
             
-            <div class="form-group">
-                <label for="email">Votre email</label>
-                <input type="email" id="email" name="email" placeholder="jean@exemple.com" required>
+            <div class="divider">ou</div>
+            
+            <!-- Option 2: Email -->
+            <div id="email-section">
+                <p class="email-toggle" onclick="showEmailForm()">📧 S'inscrire avec mon email</p>
+                
+                <form id="email-form" class="email-form hidden" onsubmit="handleEmailSubmit(event)">
+                    <div class="form-group">
+                        <label>Prénom</label>
+                        <input type="text" id="prenom" required placeholder="Jean">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="email" required placeholder="jean@exemple.com">
+                    </div>
+                    <button type="submit">Commencer l'évaluation</button>
+                    <p style="text-align: center; margin-top: 1rem; font-size: 0.875rem; color: #9ca3af;">
+                        🔒 Vos données sont sécurisées
+                    </p>
+                </form>
             </div>
-            
-            <button type="submit" id="submit-btn">
-                Démarrer l'évaluation gratuite →
-            </button>
-            
-            <p style="text-align: center; margin-top: 1.5rem; font-size: 0.875rem; color: #9ca3af;">
-                🔒 Vos données sont sécurisées et envoyées à Systeme.io
-            </p>
-        </form>
+        </div>
     </div>
 
     <!-- QUESTIONNAIRE -->
     <div id="quiz-page" class="container hidden">
+        <button class="logout-btn" onclick="logout()">Déconnexion</button>
+        <div style="clear: both; margin-bottom: 1rem;"></div>
+        
         <div class="progress-container">
             <div class="progress-bar">
                 <div class="progress-fill" id="progress-bar"></div>
@@ -369,332 +286,152 @@
             <div class="progress-text">Question <span id="current-q">1</span> sur 15</div>
         </div>
 
-        <div id="question-container">
-            <!-- Injecté par JS -->
-        </div>
+        <div id="question-container"></div>
 
         <div class="nav-buttons">
-            <button type="button" class="btn-secondary" id="btn-prev" onclick="previousQuestion()" style="visibility: hidden;">
-                ← Précédent
-            </button>
-            <button type="button" class="btn-primary" id="btn-next" onclick="nextQuestion()">
-                Suivant →
-            </button>
+            <button type="button" class="btn-secondary" id="btn-prev" onclick="previousQuestion()" style="visibility: hidden;">Précédent</button>
+            <button type="button" class="btn-primary" id="btn-next" onclick="nextQuestion()">Suivant</button>
         </div>
     </div>
 
     <!-- RÉSULTATS -->
     <div id="results-page" class="container hidden">
-        <div id="success-msg" class="success-message hidden">
-            ✅ Vos résultats ont été envoyés à votre email !
-        </div>
-        
-        <div class="results-container">
+        <div style="text-align: center; padding: 2rem 0;">
             <div class="score-circle" id="score-circle" style="--score: 0;">
                 <div class="score-inner">
                     <div class="score-value" id="final-score">0</div>
-                    <div class="score-label">/ 100</div>
+                    <div style="font-size: 0.875rem; color: #6b7280;">/100</div>
                 </div>
             </div>
             
-            <h2 class="result-title" id="result-title">Analyse en cours...</h2>
-            <p class="result-description" id="result-desc">
-                Calcul de votre profil d'indépendance...
-            </p>
+            <h2 id="result-title" style="margin-bottom: 1rem;">Analyse...</h2>
+            <p id="result-desc" style="color: #4b5563; margin-bottom: 2rem;"></p>
             
-            <div class="pillars-detail">
-                <h3>Détail par pilier</h3>
-                <div id="pillars-container">
-                    <!-- Injecté par JS -->
-                </div>
-            </div>
-            
-            <button onclick="restartQuiz()" style="margin-right: 1rem;">
-                🔄 Refaire le test
-            </button>
-            <button onclick="window.location.reload()" class="btn-secondary" style="display: inline-block; width: auto;">
-                Accueil
-            </button>
+            <button onclick="restartQuiz()" style="margin-right: 1rem;">Refaire le test</button>
+            <button onclick="logout()" class="btn-secondary" style="width: auto; display: inline-block;">Accueil</button>
         </div>
     </div>
 
     <script>
-        // CONFIGURATION SYSTEME.IO
-        const SYSTEME_API_KEY = 'wb6i8kep2wyfxocti54p6zlwpr9y1i0segstpl5dmxvtr5u6hnncrj04z867wqbn';
-        const SYSTEME_TAG_ID = '1906661';
+        // CONFIGURATION - REMPLACE CES VALEURS :
+        const CLIENT_ID = '897351129013-4qfu68vrgocp1ddjg21acgv7kh3g4nnf.apps.googleusercontent.com'; // Ton Client ID Google
+        const SYSTEME_API_KEY = 't6uoopfvjngx9avptr7ibahqiwegcoamn6n0e5fxaqbbmntfe2s5prhzvxdnkgpt'; // Ta clé API Systeme.io
+        const SYSTEME_TAG_ID = '1906661'; // Ton ID de tag
         
-        // Données utilisateur
-        let userData = {
-            firstName: '',
-            email: ''
-        };
-        
-        // Les 15 questions (3 par pilier)
-        const questions = [
-            // PILIER ARGENT
-            {
-                pillar: 'argent',
-                tagClass: 'tag-argent',
-                icon: '💚',
-                color: '#15803d',
-                text: "Avez-vous un budget mensuel établi et suivi régulièrement ?",
-                options: [
-                    { value: 0, text: "Non, je ne tiens pas de budget" },
-                    { value: 33, text: "J'ai une vague idée mais rien de formalisé" },
-                    { value: 66, text: "J'ai un budget mais je ne le suis pas toujours" },
-                    { value: 100, text: "Oui, je tiens un budget strict mensuellement" }
-                ]
-            },
-            {
-                pillar: 'argent',
-                tagClass: 'tag-argent',
-                icon: '💚',
-                color: '#15803d',
-                text: "Votre épargne de sécurité couvre combien de mois de dépenses ?",
-                options: [
-                    { value: 0, text: "Moins d'1 mois ou aucune épargne" },
-                    { value: 33, text: "1 à 3 mois de dépenses" },
-                    { value: 66, text: "3 à 6 mois de dépenses" },
-                    { value: 100, text: "6 mois ou plus (épargne de sécurité complète)" }
-                ]
-            },
-            {
-                pillar: 'argent',
-                tagClass: 'tag-argent',
-                icon: '💚',
-                color: '#15803d',
-                text: "Avez-vous des revenus passifs ou multiples sources de revenus ?",
-                options: [
-                    { value: 0, text: "Une seule source de revenus (salaire)" },
-                    { value: 33, text: "J'ai des idées mais rien de mis en place" },
-                    { value: 66, text: "1 source de revenu passif ou secondaire" },
-                    { value: 100, text: "2+ sources de revenus diversifiées" }
-                ]
-            },
-            
-            // PILIER SANTÉ
-            {
-                pillar: 'sante',
-                tagClass: 'tag-sante',
-                icon: '❤️',
-                color: '#dc2626',
-                text: "Vous pratiquez une activité physique combien de fois par semaine ?",
-                options: [
-                    { value: 0, text: "Jamais ou rarement" },
-                    { value: 33, text: "1 fois par semaine" },
-                    { value: 66, text: "2 à 3 fois par semaine" },
-                    { value: 100, text: "4 fois ou plus par semaine" }
-                ]
-            },
-            {
-                pillar: 'sante',
-                tagClass: 'tag-sante',
-                icon: '❤️',
-                color: '#dc2626',
-                text: "Votre sommeil est-il régulier et réparateur (7-8h/nuit) ?",
-                options: [
-                    { value: 0, text: "Moins de 6h ou sommeil très irrégulier" },
-                    { value: 33, text: "6-7h avec des nuits perturbées" },
-                    { value: 66, text: "7h en moyenne, assez régulier" },
-                    { value: 100, text: "7-8h de sommeil de qualité chaque nuit" }
-                ]
-            },
-            {
-                pillar: 'sante',
-                tagClass: 'tag-sante',
-                icon: '❤️',
-                color: '#dc2626',
-                text: "Avez-vous une routine de bien-être (méditation, alimentation, etc.) ?",
-                options: [
-                    { value: 0, text: "Aucune routine de bien-être" },
-                    { value: 33, text: "J'essaye mais sans régularité" },
-                    { value: 66, text: "Quelques habitudes régulières" },
-                    { value: 100, text: "Routine complète et respectée quotidiennement" }
-                ]
-            },
-            
-            // PILIER COMPÉTENCE
-            {
-                pillar: 'competence',
-                tagClass: 'tag-competence',
-                icon: '💙',
-                color: '#2563eb',
-                text: "Vous apprenez une nouvelle compétence dans votre domaine chaque mois ?",
-                options: [
-                    { value: 0, text: "Je n'apprends rien de nouveau" },
-                    { value: 33, text: "Occasionnellement quand j'en ai besoin" },
-                    { value: 66, text: "1-2 fois par mois" },
-                    { value: 100, text: "Apprentissage continu et structuré" }
-                ]
-            },
-            {
-                pillar: 'competence',
-                tagClass: 'tag-competence',
-                icon: '💙',
-                color: '#2563eb',
-                text: "Vous avez un mentor, coach ou suivez des formations régulières ?",
-                options: [
-                    { value: 0, text: "Aucun accompagnement" },
-                    { value: 33, text: "Lectures/vidéos occasionnelles" },
-                    { value: 66, text: "Formation en cours ou mentor ponctuel" },
-                    { value: 100, text: "Mentor régulier + formations continues" }
-                ]
-            },
-            {
-                pillar: 'competence',
-                tagClass: 'tag-competence',
-                icon: '💙',
-                color: '#2563eb',
-                text: "Pratiquez-vous la veille stratégique dans votre secteur ?",
-                options: [
-                    { value: 0, text: "Jamais" },
-                    { value: 33, text: "Rarement quand j'y pense" },
-                    { value: 66, text: "1-2 fois par semaine" },
-                    { value: 100, text: "Veille quotidienne ou presque" }
-                ]
-            },
-            
-            // PILIER TEMPS
-            {
-                pillar: 'temps',
-                tagClass: 'tag-temps',
-                icon: '🧡',
-                color: '#d97706',
-                text: "Utilisez-vous une méthode de gestion du temps (Time Blocking, Pomodoro) ?",
-                options: [
-                    { value: 0, text: "Aucune méthode, je gere au jour le jour" },
-                    { value: 33, text: "J'ai essayé mais pas régulièrement" },
-                    { value: 66, text: "J'utilise une méthode 2-3 fois par semaine" },
-                    { value: 100, text: "Méthode appliquée quotidiennement" }
-                ]
-            },
-            {
-                pillar: 'temps',
-                tagClass: 'tag-temps',
-                icon: '🧡',
-                color: '#d97706',
-                text: "Arrivez-vous à dire 'non' aux distractions et sollicitations externes ?",
-                options: [
-                    { value: 0, text: "Je suis constamment dérangé/interrompu" },
-                    { value: 33, text: "J'ai du mal à refuser" },
-                    { value: 66, text: "Je protege mon temps 50% du temps" },
-                    { value: 100, text: "Je garde le contrôle de mon emploi du temps" }
-                ]
-            },
-            {
-                pillar: 'temps',
-                tagClass: 'tag-temps',
-                icon: '🧡',
-                color: '#d97706',
-                text: "Avez-vous des plages horaires dédiées au 'Deep Work' (travail profond) ?",
-                options: [
-                    { value: 0, text: "Jamais, je suis en mode réactif" },
-                    { value: 33, text: "Rarement, quand j'ai le temps" },
-                    { value: 66, text: "2-3 fois par semaine" },
-                    { value: 100, text: "Tous les jours, sacré dans mon agenda" }
-                ]
-            },
-            
-            // PILIER DISCIPLINE
-            {
-                pillar: 'discipline',
-                tagClass: 'tag-discipline',
-                icon: '🖤',
-                color: '#1f2937',
-                text: "Vous vous levez à la même heure tous les jours (y compris week-ends) ?",
-                options: [
-                    { value: 0, text: "Heures totalement irrégulières" },
-                    { value: 33, text: "Régulier en semaine seulement" },
-                    { value: 66, text: "Assez régulier avec des dérives" },
-                    { value: 100, text: "Rythme strict 7j/7" }
-                ]
-            },
-            {
-                pillar: 'discipline',
-                tagClass: 'tag-discipline',
-                icon: '🖤',
-                color: '#1f2937',
-                text: "Tenez-vous un journal de progression ou faites-vous des revues hebdomadaires ?",
-                options: [
-                    { value: 0, text: "Jamais" },
-                    { value: 33, text: "Occasionnellement" },
-                    { value: 66, text: "Revues hebdo mais pas écrites" },
-                    { value: 100, text: "Journal + revues structurées chaque semaine" }
-                ]
-            },
-            {
-                pillar: 'discipline',
-                tagClass: 'tag-discipline',
-                icon: '🖤',
-                color: '#1f2937',
-                text: "Respectez-vous vos deadlines auto-imposées autant que les externes ?",
-                options: [
-                    { value: 0, text: "Je reporte toujours mes objectifs perso" },
-                    { value: 33, text: "Parfois mais j'ai du mal" },
-                    { value: 66, text: "Assez régulièrement" },
-                    { value: 100, text: "Toujours, j'ai une parole d'or envers moi-même" }
-                ]
-            }
-        ];
-
+        let userData = null;
         let currentQuestion = 0;
         let answers = new Array(15).fill(null);
-
-        // Gestion du formulaire email
+        
+        // Initialisation Google Sign-In
+        window.onload = function() {
+            // Vérifier si déjà connecté
+            const saved = localStorage.getItem('ip_user');
+            if (saved) {
+                userData = JSON.parse(saved);
+                showQuiz();
+            } else {
+                // Initialiser le bouton Google
+                if (typeof google !== 'undefined') {
+                    google.accounts.id.initialize({
+                        client_id: CLIENT_ID,
+                        callback: handleCredentialResponse
+                    });
+                    google.accounts.id.renderButton(
+                        document.getElementById("google-btn"),
+                        { theme: "outline", size: "large", width: 300, text: "continue_with" }
+                    );
+                }
+            }
+        };
+        
+        // Callback Google
+        function handleCredentialResponse(response) {
+            const payload = JSON.parse(atob(response.credential.split('.')[1]));
+            userData = {
+                email: payload.email,
+                firstName: payload.given_name || payload.name,
+                picture: payload.picture,
+                id: payload.sub
+            };
+            loginSuccess();
+        }
+        
+        // Afficher formulaire email
+        function showEmailForm() {
+            document.querySelector('.google-section').classList.add('hidden');
+            document.querySelector('.divider').classList.add('hidden');
+            document.querySelector('.email-toggle').classList.add('hidden');
+            document.getElementById('email-form').classList.remove('hidden');
+        }
+        
+        // Submit Email
         function handleEmailSubmit(e) {
             e.preventDefault();
-            userData.firstName = document.getElementById('prenom').value;
-            userData.email = document.getElementById('email').value;
-            
-            // Envoyer à Systeme.io immédiatement
-            sendToSystemeIO(userData);
-            
-            // Cacher login, montrer quiz
-            document.getElementById('login-page').classList.add('hidden');
-            document.getElementById('quiz-page').classList.remove('hidden');
-            
-            renderQuestion();
+            userData = {
+                email: document.getElementById('email').value,
+                firstName: document.getElementById('prenom').value
+            };
+            loginSuccess();
         }
-
-        // Envoi à Systeme.io
-        async function sendToSystemeIO(data, score) {
+        
+        // Login réussi (Google ou Email)
+        function loginSuccess() {
+            localStorage.setItem('ip_user', JSON.stringify(userData));
+            sendToSystemeIO(userData);
+            showQuiz();
+        }
+        
+        // Envoi Systeme.io
+        async function sendToSystemeIO(data) {
             try {
-                const body = {
-                    email: data.email,
-                    firstName: data.firstName,
-                    tags: [SYSTEME_TAG_ID]
-                };
-                
-                // Si on a un score, on l'ajoute dans les champs personnalisés (si dispo)
-                // Note: L'API Systeme.io standard n'a pas de champs perso dans l'API publique basique
-                // Mais le tag suffit pour déclencher l'automation email
-                
                 await fetch('https://api.systeme.io/api/contacts', {
                     method: 'POST',
                     headers: {
                         'X-Api-Key': SYSTEME_API_KEY,
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(body)
+                    body: JSON.stringify({
+                        email: data.email,
+                        firstName: data.firstName,
+                        tags: [SYSTEME_TAG_ID]
+                    })
                 });
-                
-                console.log('Contact envoyé à Systeme.io');
-                return true;
+                console.log('✅ Contact envoyé à Systeme.io');
             } catch (e) {
-                console.log('Erreur API (normal en local):', e);
-                // Mode local: stocker dans localStorage pour test
-                const contacts = JSON.parse(localStorage.getItem('test_contacts') || '[]');
-                contacts.push({
-                    ...data,
-                    date: new Date().toISOString(),
-                    score: score || null
-                });
-                localStorage.setItem('test_contacts', JSON.stringify(contacts));
-                return false;
+                console.log('Mode local (CORS):', e);
             }
         }
-
-        // Afficher une question
+        
+        // Les 15 questions
+        const questions = [
+            // ARGENT
+            {pillar: 'argent', tagClass: 'tag-argent', text: "Avez-vous un budget mensuel établi et suivi régulièrement ?", options: [{value: 0, text: "Non, je ne tiens pas de budget"}, {value: 33, text: "Vague idée mais pas formalisé"}, {value: 66, text: "J'ai un budget mais je ne le suis pas toujours"}, {value: 100, text: "Budget strict mensuel"}]},
+            {pillar: 'argent', tagClass: 'tag-argent', text: "Votre épargne couvre combien de mois de dépenses ?", options: [{value: 0, text: "Moins d'1 mois"}, {value: 33, text: "1 à 3 mois"}, {value: 66, text: "3 à 6 mois"}, {value: 100, text: "6 mois ou plus"}]},
+            {pillar: 'argent', tagClass: 'tag-argent', text: "Avez-vous des revenus passifs ou sources multiples ?", options: [{value: 0, text: "Une seule source (salaire)"}, {value: 33, text: "Idées mais rien de mis en place"}, {value: 66, text: "1 source secondaire"}, {value: 100, text: "2+ sources diversifiées"}]},
+            // SANTÉ
+            {pillar: 'sante', tagClass: 'tag-sante', text: "Activité physique par semaine ?", options: [{value: 0, text: "Jamais"}, {value: 33, text: "1 fois"}, {value: 66, text: "2-3 fois"}, {value: 100, text: "4 fois ou plus"}]},
+            {pillar: 'sante', tagClass: 'tag-sante', text: "Sommeil régulier (7-8h/nuit) ?", options: [{value: 0, text: "Moins de 6h"}, {value: 33, text: "6-7h perturbées"}, {value: 66, text: "7h assez régulier"}, {value: 100, text: "7-8h qualité"}]},
+            {pillar: 'sante', tagClass: 'tag-sante', text: "Routine de bien-être ?", options: [{value: 0, text: "Aucune"}, {value: 33, text: "Essais sans régularité"}, {value: 66, text: "Quelques habitudes"}, {value: 100, text: "Routine complète"}]},
+            // COMPÉTENCE
+            {pillar: 'competence', tagClass: 'tag-competence', text: "Nouvelle compétence apprise chaque mois ?", options: [{value: 0, text: "Je n'apprends rien"}, {value: 33, text: "Occasionnellement"}, {value: 66, text: "1-2 fois/mois"}, {value: 100, text: "Apprentissage continu"}]},
+            {pillar: 'competence', tagClass: 'tag-competence', text: "Mentor, coach ou formations régulières ?", options: [{value: 0, text: "Aucun"}, {value: 33, text: "Lectures/vidéos"}, {value: 66, text: "Formation en cours"}, {value: 100, text: "Mentor régulier"}]},
+            {pillar: 'competence', tagClass: 'tag-competence', text: "Veille stratégique dans votre secteur ?", options: [{value: 0, text: "Jamais"}, {value: 33, text: "Rarement"}, {value: 66, text: "1-2 fois/semaine"}, {value: 100, text: "Veille quotidienne"}]},
+            // TEMPS
+            {pillar: 'temps', tagClass: 'tag-temps', text: "Méthode de gestion du temps (Pomodoro, Time Blocking) ?", options: [{value: 0, text: "Aucune"}, {value: 33, text: "Essais irréguliers"}, {value: 66, text: "2-3 fois/semaine"}, {value: 100, text: "Quotidien"}]},
+            {pillar: 'temps', tagClass: 'tag-temps', text: "Arrivez-vous à dire 'non' aux distractions ?", options: [{value: 0, text: "Constamment dérangé"}, {value: 33, text: "J'ai du mal"}, {value: 66, text: "Je protège 50%"}, {value: 100, text: "Contrôle total"}]},
+            {pillar: 'temps', tagClass: 'tag-temps', text: "Plages 'Deep Work' dans votre agenda ?", options: [{value: 0, text: "Jamais"}, {value: 33, text: "Rarement"}, {value: 66, text: "2-3 fois/semaine"}, {value: 100, text: "Tous les jours"}]},
+            // DISCIPLINE
+            {pillar: 'discipline', tagClass: 'tag-discipline', text: "Heure de réveil régulière (7j/7) ?", options: [{value: 0, text: "Totalement irrégulier"}, {value: 33, text: "Semaine seulement"}, {value: 66, text: "Assez régulier"}, {value: 100, text: "Rythme strict 7j/7"}]},
+            {pillar: 'discipline', tagClass: 'tag-discipline', text: "Journal de progression ou revues hebdo ?", options: [{value: 0, text: "Jamais"}, {value: 33, text: "Occasionnel"}, {value: 66, text: "Mental/non écrit"}, {value: 100, text: "Journal structuré"}]},
+            {pillar: 'discipline', tagClass: 'tag-discipline', text: "Respect des deadlines auto-imposées ?", options: [{value: 0, text: "Je reporte toujours"}, {value: 33, text: "Parfois"}, {value: 66, text: "Assez régulier"}, {value: 100, text: "Parole d'or"}]}
+        ];
+        
+        function showQuiz() {
+            document.getElementById('login-page').classList.add('hidden');
+            document.getElementById('quiz-page').classList.remove('hidden');
+            renderQuestion();
+        }
+        
         function renderQuestion() {
             const q = questions[currentQuestion];
             const container = document.getElementById('question-container');
@@ -713,10 +450,8 @@
                 const selected = answers[currentQuestion] === idx ? 'selected' : '';
                 html += `
                     <label class="option-label ${selected}" onclick="selectOption(${idx})">
-                        <input type="radio" name="q${currentQuestion}" value="${idx}" 
-                            ${selected ? 'checked' : ''} 
-                            onchange="saveAnswer(${idx})" style="display: none;">
-                        <span class="option-text">${opt.text}</span>
+                        <input type="radio" name="q${currentQuestion}" value="${idx}" ${selected ? 'checked' : ''}>
+                        <span>${opt.text}</span>
                     </label>
                 `;
             });
@@ -724,167 +459,73 @@
             html += '</div></div>';
             container.innerHTML = html;
             
-            // Mise à jour UI
-            const progress = ((currentQuestion + 1) / 15) * 100;
-            document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('progress-bar').style.width = ((currentQuestion + 1) / 15 * 100) + '%';
             document.getElementById('current-q').textContent = currentQuestion + 1;
-            
-            // Boutons
             document.getElementById('btn-prev').style.visibility = currentQuestion === 0 ? 'hidden' : 'visible';
-            document.getElementById('btn-next').textContent = currentQuestion === 14 ? 'Voir mes résultats' : 'Suivant →';
+            document.getElementById('btn-next').textContent = currentQuestion === 14 ? 'Voir mes résultats' : 'Suivant';
         }
-
+        
         function selectOption(idx) {
-            // Enlever selected de tous
             document.querySelectorAll('.option-label').forEach(el => el.classList.remove('selected'));
-            // Ajouter au cliqué
             event.currentTarget.classList.add('selected');
-            // Sauvegarder
-            saveAnswer(idx);
-        }
-
-        function saveAnswer(idx) {
             answers[currentQuestion] = idx;
         }
-
+        
         function nextQuestion() {
             if (answers[currentQuestion] === null) {
-                alert('Veuillez sélectionner une réponse pour continuer');
+                alert('Veuillez sélectionner une réponse');
                 return;
             }
-            
             if (currentQuestion < 14) {
                 currentQuestion++;
                 renderQuestion();
             } else {
-                finishQuiz();
+                showResults();
             }
         }
-
+        
         function previousQuestion() {
             if (currentQuestion > 0) {
                 currentQuestion--;
                 renderQuestion();
             }
         }
-
-        function finishQuiz() {
-            // Calculer le score
-            let totalScore = 0;
-            const pillarScores = {
-                argent: { scores: [], color: '#15803d', icon: '💚' },
-                sante: { scores: [], color: '#dc2626', icon: '❤️' },
-                competence: { scores: [], color: '#2563eb', icon: '💙' },
-                temps: { scores: [], color: '#d97706', icon: '🧡' },
-                discipline: { scores: [], color: '#1f2937', icon: '🖤' }
-            };
+        
+        function showResults() {
+            let total = 0;
+            answers.forEach((idx, i) => total += questions[i].options[idx].value);
+            const score = Math.round(total / 15);
             
-            answers.forEach((answerIdx, qIdx) => {
-                const q = questions[qIdx];
-                const value = q.options[answerIdx].value;
-                totalScore += value;
-                pillarScores[q.pillar].scores.push(value);
-            });
-            
-            const finalScore = Math.round(totalScore / 15);
-            
-            // Mettre à jour le contact avec le score (si possible)
-            // Note: En mode local on peut pas vraiment updater, mais l'email est déjà parti
-            
-            // Afficher résultats
-            showResults(finalScore, pillarScores);
-        }
-
-        function showResults(score, pillarScores) {
             document.getElementById('quiz-page').classList.add('hidden');
             document.getElementById('results-page').classList.remove('hidden');
             
-            // Afficher message succès
-            document.getElementById('success-msg').classList.remove('hidden');
-            
-            // Animation score
             setTimeout(() => {
                 document.getElementById('score-circle').style.setProperty('--score', score);
-                animateValue('final-score', 0, score, 1500);
+                document.getElementById('final-score').textContent = score;
             }, 100);
             
-            // Texte adaptatif
             const titles = {
-                expert: ['🚀 Expert en autonomie', 'Vous maîtrisez déjà bien vos 5 piliers. Passez à l\'étape suivante : l\'optimisation et l\'automatisation de vos systèmes.'],
-                avance: ['💪 Profil avancé', 'Bonne base sur plusieurs piliers. Quelques ajustements stratégiques vous mèneront rapidement à l\'excellence.'],
-                intermediaire: ['📈 Profil intermédiaire', 'Vous avez des fondations mais de nombreuses zones à renforcer. Le programme 15 jours est fait pour vous.'],
-                debutant: ['🌱 Profil débutant', 'Un travail structuré sur les 5 piliers va transformer votre productivité. Commençons par les fondations essentielles.']
+                expert: ['🚀 Expert', 'Vous maîtrisez vos 5 piliers. Passez à l\'optimisation.'],
+                avance: ['💪 Avancé', 'Bonne base. Quelques ajustements pour l\'excellence.'],
+                intermediaire: ['📈 Intermédiaire', 'Programme 15 jours idéal pour vous.'],
+                debutant: ['🌱 Débutant', 'Travail structuré nécessaire sur les fondations.']
             };
-            
-            let level;
-            if (score >= 80) level = 'expert';
-            else if (score >= 60) level = 'avance';
-            else if (score >= 40) level = 'intermediaire';
-            else level = 'debutant';
-            
-            document.getElementById('result-title').textContent = titles[level][0];
-            document.getElementById('result-desc').textContent = titles[level][1];
-            
-            // Détail par pilier
-            let pillarsHtml = '';
-            for (const [pillar, data] of Object.entries(pillarScores)) {
-                const avg = Math.round(data.scores.reduce((a, b) => a + b, 0) / data.scores.length);
-                pillarsHtml += `
-                    <div class="pillar-item">
-                        <div class="pillar-icon" style="background: ${data.color}20;">${data.icon}</div>
-                        <div class="pillar-info">
-                            <div class="pillar-name">${pillar}</div>
-                            <div class="pillar-bar">
-                                <div class="pillar-fill" style="width: ${avg}%; background: ${data.color};"></div>
-                            </div>
-                        </div>
-                        <div class="pillar-score" style="color: ${data.color};">${avg}%</div>
-                    </div>
-                `;
-            }
-            document.getElementById('pillars-container').innerHTML = pillarsHtml;
-            
-            // Animation des barres après un délai
-            setTimeout(() => {
-                document.querySelectorAll('.pillar-fill').forEach(el => {
-                    const width = el.style.width;
-                    el.style.width = '0%';
-                    setTimeout(() => el.style.width = width, 100);
-                });
-            }, 500);
+            const lvl = score >= 80 ? 'expert' : score >= 60 ? 'avance' : score >= 40 ? 'intermediaire' : 'debutant';
+            document.getElementById('result-title').textContent = titles[lvl][0] + ' (' + score + '/100)';
+            document.getElementById('result-desc').textContent = titles[lvl][1];
         }
-
-        function animateValue(id, start, end, duration) {
-            const obj = document.getElementById(id);
-            const range = end - start;
-            const minTimer = 50;
-            let stepTime = Math.abs(Math.floor(duration / range));
-            stepTime = Math.max(stepTime, minTimer);
-            
-            let startTime = new Date().getTime();
-            let endTime = startTime + duration;
-            let timer;
-            
-            function run() {
-                let now = new Date().getTime();
-                let remaining = Math.max((endTime - now) / duration, 0);
-                let value = Math.round(end - (remaining * range));
-                obj.innerHTML = value;
-                if (value == end) {
-                    clearInterval(timer);
-                }
-            }
-            
-            timer = setInterval(run, stepTime);
-            run();
-        }
-
+        
         function restartQuiz() {
             currentQuestion = 0;
             answers = new Array(15).fill(null);
             document.getElementById('results-page').classList.add('hidden');
             document.getElementById('quiz-page').classList.remove('hidden');
             renderQuestion();
+        }
+        
+        function logout() {
+            localStorage.removeItem('ip_user');
+            location.reload();
         }
     </script>
 </body>
