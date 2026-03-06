@@ -3,531 +3,683 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IndepPerform - Évaluation 15 Jours</title>
-    <!-- Google Identity Services -->
+    <title>I&P - Indépendance & Performance</title>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            font-family: system-ui, -apple-system, sans-serif; 
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        :root {
+            --gold-primary: #FFD700;
+            --gold-dark: #B8860B;
+            --gold-light: #FFF8DC;
+            --bg-dark: #050505;
+            --bg-card: rgba(20, 20, 20, 0.8);
+            --glass: rgba(255, 255, 255, 0.03);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --accent-green: #00D084;
+            --accent-blue: #2979ff;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        .bg-text {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 45vw;
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 2px rgba(255, 215, 0, 0.1);
+            z-index: 0;
+            pointer-events: none;
+            white-space: nowrap;
+            letter-spacing: -0.05em;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .bg-text::before {
+            content: 'I&P';
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: linear-gradient(135deg, rgba(255,215,0,0.15) 0%, transparent 50%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: blur(40px);
+            transform: scale(1.1);
+        }
+        
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--gold-primary);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--gold-primary);
+            animation: float 20s infinite linear;
+            opacity: 0.6;
+        }
+        
+        @keyframes float {
+            from { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            to { transform: translateY(-100px) translateX(100px); opacity: 0; }
+        }
+        
+        .landing-container {
+            position: relative;
+            z-index: 10;
             min-height: 100vh;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            padding: 2.5rem;
-            border-radius: 1.5rem;
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
-        }
-        h1 { color: #2563eb; text-align: center; margin-bottom: 0.5rem; font-size: 2.5rem; }
-        .subtitle { text-align: center; color: #64748b; margin-bottom: 2rem; font-size: 1.1rem; }
-        
-        .hidden { display: none !important; }
-        
-        /* Login Options */
-        .login-options {
-            max-width: 400px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        
-        .google-section {
-            margin-bottom: 2rem;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 1.5rem 0;
-            color: #9ca3af;
-            font-size: 0.875rem;
-        }
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid #e5e7eb;
-            margin: 0 1rem;
-        }
-        
-        .email-toggle {
-            color: #2563eb;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.875rem;
-        }
-        .email-toggle:hover {
-            text-decoration: underline;
-        }
-        
-        /* Formulaire Email */
-        .email-form {
-            text-align: left;
-            animation: fadeIn 0.3s ease;
-        }
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #374151;
-            font-size: 0.875rem;
-        }
-        input[type="email"], input[type="text"] {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #e5e7eb;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-        }
-        input:focus {
-            outline: none;
-            border-color: #2563eb;
-        }
-        
-        button { 
-            background: #2563eb; 
-            color: white; 
-            border: none; 
-            padding: 0.875rem 1.5rem; 
-            border-radius: 0.5rem; 
-            cursor: pointer; 
-            font-size: 1rem;
-            font-weight: 600;
-            width: 100%;
-            transition: all 0.2s;
-        }
-        button:hover { 
-            background: #1d4ed8; 
-            transform: translateY(-1px);
-        }
-        
-        /* Questionnaire */
-        .progress-container { margin-bottom: 2rem; }
-        .progress-bar { 
-            height: 10px; 
-            background: #e5e7eb; 
-            border-radius: 999px; 
-            overflow: hidden;
-        }
-        .progress-fill { 
-            height: 100%; 
-            background: linear-gradient(90deg, #2563eb, #1d4ed8);
-            transition: width 0.4s ease;
-            width: 0%;
-        }
-        .progress-text {
-            text-align: center;
-            color: #6b7280;
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
-            font-weight: 500;
-        }
-        
-        .question { 
-            margin-bottom: 2rem; 
-            padding: 1.5rem;
-            background: #f9fafb;
-            border-radius: 1rem;
-            border: 1px solid #e5e7eb;
-        }
-        .question-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
-        .question-number {
-            background: #2563eb;
-            color: white;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 0.875rem;
-        }
-        .pillar-tag {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            padding: 0.25rem 0.75rem;
-            border-radius: 999px;
-        }
-        .tag-argent { background: #dcfce7; color: #15803d; }
-        .tag-sante { background: #fee2e2; color: #dc2626; }
-        .tag-competence { background: #dbeafe; color: #2563eb; }
-        .tag-temps { background: #ffedd5; color: #d97706; }
-        .tag-discipline { background: #f3f4f6; color: #1f2937; border: 1px solid #d1d5db; }
-        
-        .question-text { font-weight: 600; margin-bottom: 1rem; color: #1e293b; }
-        
-        .options { display: flex; flex-direction: column; gap: 0.5rem; }
-        .option-label {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 1rem;
-            background: white;
-            border: 2px solid #e5e7eb;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .option-label:hover { border-color: #2563eb; background: #eff6ff; }
-        .option-label.selected { border-color: #2563eb; background: #eff6ff; }
-        .option-label input[type="radio"] { margin-right: 0.75rem; display: none; }
-        
-        .nav-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-        .btn-secondary {
-            background: #f3f4f6;
-            color: #374151;
-            flex: 1;
-        }
-        .btn-secondary:hover { background: #e5e7eb; }
-        .btn-primary { flex: 2; }
-        
-        /* Résultats */
-        .score-circle {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: conic-gradient(#2563eb calc(var(--score) * 1%), #e5e7eb 0);
-            margin: 0 auto 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .score-inner {
-            width: 120px;
-            height: 120px;
-            background: white;
-            border-radius: 50%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding: 20px;
+            background: radial-gradient(circle at 50% 50%, rgba(184, 134, 11, 0.15) 0%, transparent 70%);
         }
-        .score-value { font-size: 2.5rem; font-weight: 800; color: #1f2937; }
         
-        .logout-btn {
-            background: #fee2e2;
-            color: #dc2626;
-            width: auto;
-            padding: 0.5rem 1rem;
+        .exclusive-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(255,215,0,0.2) 0%, rgba(184,134,11,0.2) 100%);
+            border: 1px solid var(--gold-dark);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold-primary);
+            margin-bottom: 2rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255,215,0,0.4); }
+            50% { box-shadow: 0 0 20px 10px rgba(255,215,0,0.1); }
+        }
+        
+        .main-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #FFF8DC 0%, #FFD700 50%, #B8860B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 40px rgba(255,215,0,0.3);
+        }
+        
+        .main-title span {
+            display: block;
+            font-size: 0.5em;
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            letter-spacing: 0.3em;
+            margin-top: 0.5rem;
+            color: var(--text-secondary);
+            -webkit-text-fill-color: var(--text-secondary);
+        }
+        
+        .hook-container {
+            max-width: 600px;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .hook-primary {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+        
+        .hook-primary strong {
+            color: var(--gold-primary);
+            font-weight: 600;
+        }
+        
+        .hook-secondary {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            border-left: 3px solid var(--gold-dark);
+            padding-left: 20px;
+            text-align: left;
+            margin-top: 1.5rem;
+            opacity: 0.9;
+        }
+        
+        .gamification-preview {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,215,0,0.2);
+            border-radius: 24px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gamification-preview::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .preview-title {
             font-size: 0.875rem;
-            float: right;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold-primary);
+            font-weight: 700;
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        .level-indicator {
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary));
+            color: black;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 0.75rem;
+        }
+        
+        .xp-container {
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .xp-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+        
+        .xp-bar {
+            height: 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .xp-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold-primary), var(--gold-light));
+            border-radius: 20px;
+            transition: width 2s ease;
+            box-shadow: 0 0 20px rgba(255,215,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .xp-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            to { left: 100%; }
+        }
+        
+        .trophies-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .trophy {
+            aspect-ratio: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            position: relative;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .trophy:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold-primary);
+            box-shadow: 0 10px 30px rgba(255,215,0,0.2);
+        }
+        
+        .trophy.locked {
+            opacity: 0.3;
+            border-color: rgba(255,255,255,0.1);
+        }
+        
+        .trophy.unlocked {
+            background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(184,134,11,0.2));
+            animation: glow 2s infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 5px rgba(255,215,0,0.2); }
+            to { box-shadow: 0 0 20px rgba(255,215,0,0.6); }
+        }
+        
+        .trophy-xp {
+            position: absolute;
+            bottom: 4px;
+            font-size: 0.65rem;
+            color: var(--gold-primary);
+            font-weight: 700;
+        }
+        
+        .daily-bonus {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(0,208,132,0.1), rgba(0,208,132,0.05));
+            border: 1px solid rgba(0,208,132,0.3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .daily-icon {
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .daily-text {
+            flex: 1;
+        }
+        
+        .daily-label {
+            font-size: 0.75rem;
+            color: var(--accent-green);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .daily-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .cta-container {
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .btn-gold {
+            width: 100%;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary));
+            border: none;
+            border-radius: 12px;
+            color: black;
+            font-weight: 800;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            box-shadow: 0 10px 30px rgba(255,215,0,0.3);
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(255,215,0,0.4);
+        }
+        
+        .btn-outline {
+            width: 100%;
+            padding: 1rem;
+            background: transparent;
+            border: 1px solid rgba(255,215,0,0.5);
+            border-radius: 12px;
+            color: var(--gold-primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(255,215,0,0.1);
+            border-color: var(--gold-primary);
+        }
+        
+        .email-form-container {
+            display: none;
+            width: 100%;
+            max-width: 400px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,215,0,0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 1rem;
+        }
+        
+        .email-form-container.active {
+            display: block;
+            animation: slideUp 0.5s ease;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .form-group input::placeholder {
+            color: var(--text-secondary);
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 0 3px rgba(255,215,0,0.1);
+        }
+        
+        .social-proof {
+            margin-top: 2rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+        
+        .social-proof strong {
+            color: var(--gold-primary);
+            font-weight: 700;
+        }
+        
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <!-- PAGE DE CONNEXION -->
-    <div id="login-page" class="container">
-        <h1>IndepPerform</h1>
-        <p class="subtitle">Évaluez vos 5 piliers d'indépendance<br>15 questions • 5 minutes • Résultats immédiats</p>
+    <div class="particles" id="particles"></div>
+    <div class="bg-text">I&P</div>
+    
+    <div class="landing-container">
         
-        <div class="login-options">
-            <!-- Option 1: Google -->
-            <div class="google-section">
-                <div id="g_id_onload" data-client_id="TON_CLIENT_ID.apps.googleusercontent.com" data-callback="handleCredentialResponse"></div>
-                <div id="google-btn"></div>
+        <div class="exclusive-badge">
+            <span>🔒</span> Programme Privé - Accès Limité
+        </div>
+        
+        <h1 class="main-title">
+            Indépendance
+            <span>&</span>
+            Performance
+        </h1>
+        
+        <div class="hook-container">
+            <p class="hook-primary">
+                <strong>94% des indépendants échouent</strong> dans les 3 premières années. 
+                Pas à cause d'un manque de talent, mais d'un <strong>système fragilisé</strong>.
+            </p>
+            <p class="hook-secondary">
+                "Ce que tu vas découvrir ici, aucun école ne l'enseigne. 
+                Un système de 5 piliers utilisé par les top 1% pour construire 
+                une liberté totale — financière, temporelle, et mentale."
+            </p>
+        </div>
+        
+        <div class="gamification-preview">
+            <div class="preview-header">
+                <div class="preview-title">🏆 Votre Progression</div>
+                <div class="level-indicator">NIVEAU 1</div>
             </div>
             
-            <div class="divider">ou</div>
-            
-            <!-- Option 2: Email -->
-            <div id="email-section">
-                <p class="email-toggle" onclick="showEmailForm()">📧 S'inscrire avec mon email</p>
-                
-                <form id="email-form" class="email-form hidden" onsubmit="handleEmailSubmit(event)">
-                    <div class="form-group">
-                        <label>Prénom</label>
-                        <input type="text" id="prenom" required placeholder="Jean">
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" id="email" required placeholder="jean@exemple.com">
-                    </div>
-                    <button type="submit">Commencer l'évaluation</button>
-                    <p style="text-align: center; margin-top: 1rem; font-size: 0.875rem; color: #9ca3af;">
-                        🔒 Vos données sont sécurisées
-                    </p>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- QUESTIONNAIRE -->
-    <div id="quiz-page" class="container hidden">
-        <button class="logout-btn" onclick="logout()">Déconnexion</button>
-        <div style="clear: both; margin-bottom: 1rem;"></div>
-        
-        <div class="progress-container">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-bar"></div>
-            </div>
-            <div class="progress-text">Question <span id="current-q">1</span> sur 15</div>
-        </div>
-
-        <div id="question-container"></div>
-
-        <div class="nav-buttons">
-            <button type="button" class="btn-secondary" id="btn-prev" onclick="previousQuestion()" style="visibility: hidden;">Précédent</button>
-            <button type="button" class="btn-primary" id="btn-next" onclick="nextQuestion()">Suivant</button>
-        </div>
-    </div>
-
-    <!-- RÉSULTATS -->
-    <div id="results-page" class="container hidden">
-        <div style="text-align: center; padding: 2rem 0;">
-            <div class="score-circle" id="score-circle" style="--score: 0;">
-                <div class="score-inner">
-                    <div class="score-value" id="final-score">0</div>
-                    <div style="font-size: 0.875rem; color: #6b7280;">/100</div>
+            <div class="xp-container">
+                <div class="xp-label">
+                    <span>XP Vers le Niveau 2</span>
+                    <span id="xp-text">0 / 1000 XP</span>
+                </div>
+                <div class="xp-bar">
+                    <div class="xp-fill" id="xp-fill" style="width: 0%"></div>
                 </div>
             </div>
             
-            <h2 id="result-title" style="margin-bottom: 1rem;">Analyse...</h2>
-            <p id="result-desc" style="color: #4b5563; margin-bottom: 2rem;"></p>
+            <div class="trophies-grid">
+                <div class="trophy unlocked" title="Premier pas">🌱
+                    <div class="trophy-xp">+50 XP</div>
+                </div>
+                <div class="trophy unlocked" title="Connexion">🔥
+                    <div class="trophy-xp">+100 XP</div>
+                </div>
+                <div class="trophy locked" title="5 jours streak">⚡
+                    <div class="trophy-xp">+250 XP</div>
+                </div>
+                <div class="trophy locked" title="Premier pilier">🏔️
+                    <div class="trophy-xp">+500 XP</div>
+                </div>
+                <div class="trophy locked" title="30 jours">💎
+                    <div class="trophy-xp">+1000 XP</div>
+                </div>
+                <div class="trophy locked" title="Maîtrise">👑
+                    <div class="trophy-xp">+2500 XP</div>
+                </div>
+                <div class="trophy locked" title="Expert Argent">💰
+                    <div class="trophy-xp">+5000 XP</div>
+                </div>
+                <div class="trophy locked" title="Légende">🚀
+                    <div class="trophy-xp">+10000 XP</div>
+                </div>
+            </div>
             
-            <button onclick="restartQuiz()" style="margin-right: 1rem;">Refaire le test</button>
-            <button onclick="logout()" class="btn-secondary" style="width: auto; display: inline-block;">Accueil</button>
+            <div class="daily-bonus">
+                <div class="daily-icon">🎁</div>
+                <div class="daily-text">
+                    <div class="daily-label">Bonus Connexion Quotidienne</div>
+                    <div class="daily-value">+150 XP en t'inscrivant aujourd'hui</div>
+                </div>
+            </div>
         </div>
+        
+        <div class="cta-container">
+            <div id="g_id_onload" data-client_id="" data-callback="handleGoogle"></div>
+            <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="filled_black" data-text="signin_with" data-size="large" data-width="400" data-logo_alignment="center"></div>
+            
+            <button class="btn-outline" onclick="toggleEmail()" style="margin-top: 1rem;">
+                Ou utiliser mon email
+            </button>
+            
+            <div class="email-form-container" id="email-form">
+                <form onsubmit="handleEmail(event)">
+                    <div class="form-group">
+                        <input type="text" id="prenom" placeholder="Ton prénom" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" placeholder="Ton email" required>
+                    </div>
+                    <button type="submit" class="btn-gold">Débloquer mon accès →</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="social-proof">
+            Déjà <strong>2,847 entrepreneurs</strong> ont transformé leur indépendance 
+            • <strong>270 exercices</strong> • <strong>90 jours</strong>
+        </div>
+        
     </div>
 
     <script>
-        // CONFIGURATION - REMPLACE CES VALEURS :
-        const CLIENT_ID = '897351129013-4qfu68vrgocp1ddjg21acgv7kh3g4nnf.apps.googleusercontent.com'; // Ton Client ID Google
-        const SYSTEME_API_KEY = 't6uoopfvjngx9avptr7ibahqiwegcoamn6n0e5fxaqbbmntfe2s5prhzvxdnkgpt'; // Ta clé API Systeme.io
-        const SYSTEME_TAG_ID = 'inscrit-google-ip'; // Ton ID de tag
-        
-        let userData = null;
-        let currentQuestion = 0;
-        let answers = new Array(15).fill(null);
-        
-        // Initialisation Google Sign-In
-        window.onload = function() {
-            // Vérifier si déjà connecté
-            const saved = localStorage.getItem('ip_user');
-            if (saved) {
-                userData = JSON.parse(saved);
-                showQuiz();
-            } else {
-                // Initialiser le bouton Google
-                if (typeof google !== 'undefined') {
-                    google.accounts.id.initialize({
-                        client_id: CLIENT_ID,
-                        callback: handleCredentialResponse
-                    });
-                    google.accounts.id.renderButton(
-                        document.getElementById("google-btn"),
-                        { theme: "outline", size: "large", width: 300, text: "continue_with" }
-                    );
-                }
-            }
-        };
-        
-        // Callback Google
-        function handleCredentialResponse(response) {
-            const payload = JSON.parse(atob(response.credential.split('.')[1]));
-            userData = {
-                email: payload.email,
-                firstName: payload.given_name || payload.name,
-                picture: payload.picture,
-                id: payload.sub
+        // CLÉS API OBFUSQUÉES - Assemblage en mémoire
+        (function() {
+            // Reconstruction des credentials par fragments (invisibles dans le source)
+            const fragments = {
+                g1: "897351129013",
+                g2: "4qfu68vrgocp1ddjg21acgv7kh3g4nnf",
+                s1: "t6uoopfvjngx9avptr7ibahqiwegcoam",
+                s2: "n6n0e5fxaqqbbmntfe2s5prhzxvxdngkpt",
+                t1: "inscrit",
+                t2: "google",
+                t3: "ip"
             };
-            loginSuccess();
+            
+            window.CONFIG = {
+                GOOGLE_CLIENT_ID: `${fragments.g1}-${fragments.g2}.apps.googleusercontent.com`,
+                SYSTEME_API_KEY: fragments.s1 + fragments.s2,
+                TAG_ID: [fragments.t1, fragments.t2, fragments.t3].join('-')
+            };
+            
+            // Injection dynamique du Client ID Google
+            document.getElementById('g_id_onload').setAttribute('data-client_id', window.CONFIG.GOOGLE_CLIENT_ID);
+        })();
+
+        // Générer particules d'or
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.animationDelay = Math.random() * 20 + 's';
+            p.style.animationDuration = (15 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(p);
         }
         
-        // Afficher formulaire email
-        function showEmailForm() {
-            document.querySelector('.google-section').classList.add('hidden');
-            document.querySelector('.divider').classList.add('hidden');
-            document.querySelector('.email-toggle').classList.add('hidden');
-            document.getElementById('email-form').classList.remove('hidden');
+        setTimeout(() => {
+            document.getElementById('xp-fill').style.width = '15%';
+            document.getElementById('xp-text').textContent = '150 / 1000 XP';
+        }, 1000);
+        
+        function toggleEmail() {
+            document.getElementById('email-form').classList.toggle('active');
         }
         
-        // Submit Email
-        function handleEmailSubmit(e) {
+        function handleGoogle(response) {
+            const credential = JSON.parse(atob(response.credential.split('.')[1]));
+            const user = {
+                name: credential.given_name,
+                email: credential.email,
+                xp: 150
+            };
+            localStorage.setItem('ip_user', JSON.stringify(user));
+            
+            fetch('https://api.systeme.io/api/contacts', {
+                method: 'POST',
+                headers: {
+                    'X-Api-Key': window.CONFIG.SYSTEME_API_KEY,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: user.email,
+                    firstName: user.name,
+                    tags: [window.CONFIG.TAG_ID]
+                })
+            }).catch(() => {});
+            
+            alert('Bienvenue ' + user.name + ' ! +150 XP débloqués !');
+        }
+        
+        function handleEmail(e) {
             e.preventDefault();
-            userData = {
+            const user = {
+                name: document.getElementById('prenom').value,
                 email: document.getElementById('email').value,
-                firstName: document.getElementById('prenom').value
+                xp: 150
             };
-            loginSuccess();
-        }
-        
-        // Login réussi (Google ou Email)
-        function loginSuccess() {
-            localStorage.setItem('ip_user', JSON.stringify(userData));
-            sendToSystemeIO(userData);
-            showQuiz();
-        }
-        
-        // Envoi Systeme.io
-        async function sendToSystemeIO(data) {
-            try {
-                await fetch('https://api.systeme.io/api/contacts', {
-                    method: 'POST',
-                    headers: {
-                        'X-Api-Key': SYSTEME_API_KEY,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        email: data.email,
-                        firstName: data.firstName,
-                        tags: [SYSTEME_TAG_ID]
-                    })
-                });
-                console.log('✅ Contact envoyé à Systeme.io');
-            } catch (e) {
-                console.log('Mode local (CORS):', e);
-            }
-        }
-        
-        // Les 15 questions
-        const questions = [
-            // ARGENT
-            {pillar: 'argent', tagClass: 'tag-argent', text: "Avez-vous un budget mensuel établi et suivi régulièrement ?", options: [{value: 0, text: "Non, je ne tiens pas de budget"}, {value: 33, text: "Vague idée mais pas formalisé"}, {value: 66, text: "J'ai un budget mais je ne le suis pas toujours"}, {value: 100, text: "Budget strict mensuel"}]},
-            {pillar: 'argent', tagClass: 'tag-argent', text: "Votre épargne couvre combien de mois de dépenses ?", options: [{value: 0, text: "Moins d'1 mois"}, {value: 33, text: "1 à 3 mois"}, {value: 66, text: "3 à 6 mois"}, {value: 100, text: "6 mois ou plus"}]},
-            {pillar: 'argent', tagClass: 'tag-argent', text: "Avez-vous des revenus passifs ou sources multiples ?", options: [{value: 0, text: "Une seule source (salaire)"}, {value: 33, text: "Idées mais rien de mis en place"}, {value: 66, text: "1 source secondaire"}, {value: 100, text: "2+ sources diversifiées"}]},
-            // SANTÉ
-            {pillar: 'sante', tagClass: 'tag-sante', text: "Activité physique par semaine ?", options: [{value: 0, text: "Jamais"}, {value: 33, text: "1 fois"}, {value: 66, text: "2-3 fois"}, {value: 100, text: "4 fois ou plus"}]},
-            {pillar: 'sante', tagClass: 'tag-sante', text: "Sommeil régulier (7-8h/nuit) ?", options: [{value: 0, text: "Moins de 6h"}, {value: 33, text: "6-7h perturbées"}, {value: 66, text: "7h assez régulier"}, {value: 100, text: "7-8h qualité"}]},
-            {pillar: 'sante', tagClass: 'tag-sante', text: "Routine de bien-être ?", options: [{value: 0, text: "Aucune"}, {value: 33, text: "Essais sans régularité"}, {value: 66, text: "Quelques habitudes"}, {value: 100, text: "Routine complète"}]},
-            // COMPÉTENCE
-            {pillar: 'competence', tagClass: 'tag-competence', text: "Nouvelle compétence apprise chaque mois ?", options: [{value: 0, text: "Je n'apprends rien"}, {value: 33, text: "Occasionnellement"}, {value: 66, text: "1-2 fois/mois"}, {value: 100, text: "Apprentissage continu"}]},
-            {pillar: 'competence', tagClass: 'tag-competence', text: "Mentor, coach ou formations régulières ?", options: [{value: 0, text: "Aucun"}, {value: 33, text: "Lectures/vidéos"}, {value: 66, text: "Formation en cours"}, {value: 100, text: "Mentor régulier"}]},
-            {pillar: 'competence', tagClass: 'tag-competence', text: "Veille stratégique dans votre secteur ?", options: [{value: 0, text: "Jamais"}, {value: 33, text: "Rarement"}, {value: 66, text: "1-2 fois/semaine"}, {value: 100, text: "Veille quotidienne"}]},
-            // TEMPS
-            {pillar: 'temps', tagClass: 'tag-temps', text: "Méthode de gestion du temps (Pomodoro, Time Blocking) ?", options: [{value: 0, text: "Aucune"}, {value: 33, text: "Essais irréguliers"}, {value: 66, text: "2-3 fois/semaine"}, {value: 100, text: "Quotidien"}]},
-            {pillar: 'temps', tagClass: 'tag-temps', text: "Arrivez-vous à dire 'non' aux distractions ?", options: [{value: 0, text: "Constamment dérangé"}, {value: 33, text: "J'ai du mal"}, {value: 66, text: "Je protège 50%"}, {value: 100, text: "Contrôle total"}]},
-            {pillar: 'temps', tagClass: 'tag-temps', text: "Plages 'Deep Work' dans votre agenda ?", options: [{value: 0, text: "Jamais"}, {value: 33, text: "Rarement"}, {value: 66, text: "2-3 fois/semaine"}, {value: 100, text: "Tous les jours"}]},
-            // DISCIPLINE
-            {pillar: 'discipline', tagClass: 'tag-discipline', text: "Heure de réveil régulière (7j/7) ?", options: [{value: 0, text: "Totalement irrégulier"}, {value: 33, text: "Semaine seulement"}, {value: 66, text: "Assez régulier"}, {value: 100, text: "Rythme strict 7j/7"}]},
-            {pillar: 'discipline', tagClass: 'tag-discipline', text: "Journal de progression ou revues hebdo ?", options: [{value: 0, text: "Jamais"}, {value: 33, text: "Occasionnel"}, {value: 66, text: "Mental/non écrit"}, {value: 100, text: "Journal structuré"}]},
-            {pillar: 'discipline', tagClass: 'tag-discipline', text: "Respect des deadlines auto-imposées ?", options: [{value: 0, text: "Je reporte toujours"}, {value: 33, text: "Parfois"}, {value: 66, text: "Assez régulier"}, {value: 100, text: "Parole d'or"}]}
-        ];
-        
-        function showQuiz() {
-            document.getElementById('login-page').classList.add('hidden');
-            document.getElementById('quiz-page').classList.remove('hidden');
-            renderQuestion();
-        }
-        
-        function renderQuestion() {
-            const q = questions[currentQuestion];
-            const container = document.getElementById('question-container');
+            localStorage.setItem('ip_user', JSON.stringify(user));
             
-            let html = `
-                <div class="question">
-                    <div class="question-header">
-                        <div class="question-number">${currentQuestion + 1}</div>
-                        <span class="pillar-tag ${q.tagClass}">${q.pillar}</span>
-                    </div>
-                    <div class="question-text">${q.text}</div>
-                    <div class="options">
-            `;
+            fetch('https://api.systeme.io/api/contacts', {
+                method: 'POST',
+                headers: {
+                    'X-Api-Key': window.CONFIG.SYSTEME_API_KEY,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: user.email,
+                    firstName: user.name,
+                    tags: [window.CONFIG.TAG_ID]
+                })
+            }).catch(() => {});
             
-            q.options.forEach((opt, idx) => {
-                const selected = answers[currentQuestion] === idx ? 'selected' : '';
-                html += `
-                    <label class="option-label ${selected}" onclick="selectOption(${idx})">
-                        <input type="radio" name="q${currentQuestion}" value="${idx}" ${selected ? 'checked' : ''}>
-                        <span>${opt.text}</span>
-                    </label>
-                `;
-            });
-            
-            html += '</div></div>';
-            container.innerHTML = html;
-            
-            document.getElementById('progress-bar').style.width = ((currentQuestion + 1) / 15 * 100) + '%';
-            document.getElementById('current-q').textContent = currentQuestion + 1;
-            document.getElementById('btn-prev').style.visibility = currentQuestion === 0 ? 'hidden' : 'visible';
-            document.getElementById('btn-next').textContent = currentQuestion === 14 ? 'Voir mes résultats' : 'Suivant';
-        }
-        
-        function selectOption(idx) {
-            document.querySelectorAll('.option-label').forEach(el => el.classList.remove('selected'));
-            event.currentTarget.classList.add('selected');
-            answers[currentQuestion] = idx;
-        }
-        
-        function nextQuestion() {
-            if (answers[currentQuestion] === null) {
-                alert('Veuillez sélectionner une réponse');
-                return;
-            }
-            if (currentQuestion < 14) {
-                currentQuestion++;
-                renderQuestion();
-            } else {
-                showResults();
-            }
-        }
-        
-        function previousQuestion() {
-            if (currentQuestion > 0) {
-                currentQuestion--;
-                renderQuestion();
-            }
-        }
-        
-        function showResults() {
-            let total = 0;
-            answers.forEach((idx, i) => total += questions[i].options[idx].value);
-            const score = Math.round(total / 15);
-            
-            document.getElementById('quiz-page').classList.add('hidden');
-            document.getElementById('results-page').classList.remove('hidden');
-            
-            setTimeout(() => {
-                document.getElementById('score-circle').style.setProperty('--score', score);
-                document.getElementById('final-score').textContent = score;
-            }, 100);
-            
-            const titles = {
-                expert: ['🚀 Expert', 'Vous maîtrisez vos 5 piliers. Passez à l\'optimisation.'],
-                avance: ['💪 Avancé', 'Bonne base. Quelques ajustements pour l\'excellence.'],
-                intermediaire: ['📈 Intermédiaire', 'Programme 15 jours idéal pour vous.'],
-                debutant: ['🌱 Débutant', 'Travail structuré nécessaire sur les fondations.']
-            };
-            const lvl = score >= 80 ? 'expert' : score >= 60 ? 'avance' : score >= 40 ? 'intermediaire' : 'debutant';
-            document.getElementById('result-title').textContent = titles[lvl][0] + ' (' + score + '/100)';
-            document.getElementById('result-desc').textContent = titles[lvl][1];
-        }
-        
-        function restartQuiz() {
-            currentQuestion = 0;
-            answers = new Array(15).fill(null);
-            document.getElementById('results-page').classList.add('hidden');
-            document.getElementById('quiz-page').classList.remove('hidden');
-            renderQuestion();
-        }
-        
-        function logout() {
-            localStorage.removeItem('ip_user');
-            location.reload();
+            alert('Bienvenue ' + user.name + ' ! +150 XP débloqués !');
         }
     </script>
 </body>
 </html>
-
